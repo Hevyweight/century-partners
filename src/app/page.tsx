@@ -12,20 +12,37 @@ export default function LoginPage() {
   const router = useRouter()
   const supabase = createClient()
 
-  async function handleLogin() {
-    setLoading(true)
-    setError(null)
+async function handleLogin() {
+  setLoading(true)
+  setError(null)
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+  const { data: authData, error: authError } = await supabase.auth.signInWithPassword({ email, password })
 
-    if (error) {
-      setError(error.message)
-      setLoading(false)
-      return
-    }
-
-    router.push('/studio')
+  if (authError) {
+    setError(authError.message)
+    setLoading(false)
+    return
   }
+
+  // Fetch profile
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('client_id, role')
+    .eq('id', authData.user.id)
+    .single()
+
+  if (!profile) {
+    setError('No profile found. Contact support.')
+    setLoading(false)
+    return
+  }
+
+  if (profile.role === 'admin') {
+    router.push('/admin')
+  } else {
+    window.location.href = `https://${profile.client_id}.century.partners/studio`
+  }
+}
 
   return (
     <main className="min-h-screen bg-neutral-950 flex items-center justify-center px-4">
