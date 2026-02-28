@@ -9,6 +9,8 @@ export async function GET(request: NextRequest) {
   const token_hash = searchParams.get('token_hash')
   const type = searchParams.get('type')
 
+  console.log('Auth confirm hit:', { token_hash, type })
+
   if (token_hash && type) {
     const cookieStore = await cookies()
     const supabase = createServerClient(
@@ -28,7 +30,8 @@ export async function GET(request: NextRequest) {
       }
     )
 
-    const { error } = await supabase.auth.verifyOtp({ token_hash, type: String as any })
+    const { error } = await supabase.auth.verifyOtp({ token_hash, type: type as any })
+    console.log('verifyOtp error:', error)
 
     if (!error) {
       return NextResponse.redirect(new URL('/set-password', request.url))
