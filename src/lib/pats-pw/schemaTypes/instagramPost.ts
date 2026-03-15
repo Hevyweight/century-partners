@@ -51,7 +51,7 @@ export default defineType({
       options: {
         accept: 'video/*',
       },
-      description: 'Upload a video (e.g., back_steps.mp4)',
+      description: 'Upload a video file',
       hidden: ({ parent }) => parent?.mediaType !== 'video',
       validation: (Rule) =>
         Rule.custom((file, context) => {
@@ -64,12 +64,15 @@ export default defineType({
         }),
     }),
     
+    // For videos - upload a poster image
     defineField({
-      name: 'videoPosterFilename',
-      title: 'Video Poster Image Filename',
-      type: 'string',
-      description: 'e.g., "back_steps-poster.jpg" (must be in /public/videos/ folder)',
-      placeholder: 'back_steps-poster.jpg',
+      name: 'videoPoster',
+      title: 'Video Poster Image',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
+      description: 'Thumbnail shown before the video plays',
       hidden: ({ parent }) => parent?.mediaType !== 'video',
     }),
     
@@ -132,21 +135,19 @@ export default defineType({
       media: 'image',
       mediaType: 'mediaType',
       videoFile: 'videoFile',
+      videoPoster: 'videoPoster',
       date: 'postedDate',
     },
     prepare(selection) {
-      const { title, caption, media, mediaType, videoFile, date } = selection
+      const { title, caption, media, mediaType, videoFile, videoPoster, date } = selection
       const dateStr = date ? new Date(date).toLocaleDateString() : 'No date'
       
       let displayTitle = ''
       if (title) {
-        // If title exists, use it
         displayTitle = title
       } else if (mediaType === 'video') {
-        // For videos without title, show filename
         displayTitle = `🎥 ${videoFile?.asset?.originalFilename ?? 'Video'}`
       } else if (caption) {
-        // For images without title, show caption
         displayTitle = caption.substring(0, 50) + (caption.length > 50 ? '...' : '')
       } else {
         displayTitle = 'Untitled Post'
@@ -155,7 +156,8 @@ export default defineType({
       return {
         title: displayTitle,
         subtitle: dateStr,
-        media,
+        // Show poster image in studio preview if available, otherwise fall back to image
+        media: mediaType === 'video' ? videoPoster : media,
       }
     },
   },
