@@ -47,7 +47,7 @@ async function handleLogin() {
   return (
     <main className="min-h-screen bg-neutral-950 flex items-center justify-center px-4">
       {/* Back arrow */}
-      <a
+      {/* <a
         href="https://scorecentury.com"
         className="absolute top-6 left-6 text-neutral-400 hover:text-white transition-colors flex items-center gap-2 text-sm"
       >
@@ -55,7 +55,7 @@ async function handleLogin() {
           <path d="M19 12H5M12 5l-7 7 7 7"/>
         </svg>
         Back
-      </a>
+      </a> */}
 
       <div className="w-full max-w-sm">
         <h1 className="text-2xl font-bold text-white mb-2">Century Partners</h1>
