@@ -3,7 +3,7 @@ import { page } from './page'
 import { locationPage } from './locationPage'
 import { serviceLocationPage } from './serviceLocationPage'
 import { blogPost } from './blogPost'
-import instagramPost from './instagramPost'
+import  galleryItem   from './galleryItem'
 import { blogPostHowTo } from './blogPostHowTo'
 import { blogPostCompleteGuide } from './blogPostCompleteGuide'
 import { blogPostBestTop } from './blogPostBestTop'
@@ -18,5 +18,5 @@ export const schemaTypes = [
   blogPostCompleteGuide,
   blogPostBestTop,
   blogPostComparison,
-  instagramPost,     // Instagram posts
+  galleryItem,     // Instagram posts
 ]
